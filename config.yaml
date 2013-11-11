@@ -1,0 +1,5 @@
+name: appname
+version: 1
+handle:
+- rewrite: if(!is_dir() && !is_file() && path ~ "^/opened$") goto "/action.php?action=opened"
+- rewrite: if(!is_dir() && !is_file() && path ~ "^/move$") goto "/action.php?action=move"
