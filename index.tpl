@@ -138,7 +138,7 @@
       }
 
       sendMessage = function(path, opt_param) {
-        path += '&g=' + state.game_key;
+        path += '?g=' + state.game_key;
         if (opt_param) {
           path += '&' + opt_param;
         }
@@ -149,7 +149,7 @@
 
       moveInSquare = function(id) {
         if (isMyMove() && state.board[id] == ' ') {
-          sendMessage('/action.php?action=move', 'i=' + id);
+          sendMessage('/move', 'i=' + id);
         }
       }
 
@@ -173,7 +173,7 @@
       }
       
       onOpened = function() {
-        sendMessage('/action.php?action=opened');
+        sendMessage('/opened');
       };
       
       onMessage = function(m) {
