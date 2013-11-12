@@ -138,7 +138,7 @@
       }
 
       sendMessage = function(path, opt_param) {
-        path += '?g=' + state.game_key;
+        path += '&g=' + state.game_key;
         if (opt_param) {
           path += '&' + opt_param;
         }
@@ -149,7 +149,7 @@
 
       moveInSquare = function(id) {
         if (isMyMove() && state.board[id] == ' ') {
-          sendMessage('/move', 'i=' + id);
+          sendMessage('/action.php?action=move', 'i=' + id);
         }
       }
 
@@ -173,7 +173,7 @@
       }
       
       onOpened = function() {
-        sendMessage('/opened');
+        sendMessage('/action.php?action=opened');
       };
       
       onMessage = function(m) {
@@ -188,13 +188,13 @@
       }
       
       openChannel = function() {
-        var token = '{{ token }}';
-        var uri = 'http://channel.sae.sina.com.cn:9999/' + token;
-        var options = {
-            debug: true,
-            protocols_whitelist: [/*'websocket', */'xdr-streaming', 'xhr-streaming', 'iframe-eventsource', 'iframe-htmlfile', 'xdr-polling', 'xhr-polling', 'iframe-xhr-polling', 'jsonp-polling'],
-        };
-        var socket = new SockJS(uri, null, options);
+        //var token = '<?=$token?>';
+        //var uri = 'http://channel.sae.sina.com.cn:9999/' + token;
+        //var options = {
+        //    debug: true,
+        //    protocols_whitelist: [/*'websocket', */'xdr-streaming', 'xhr-streaming', 'iframe-eventsource', 'iframe-htmlfile', 'xdr-polling', 'xhr-polling', 'iframe-xhr-polling', 'jsonp-polling'],
+        //};
+        var socket = new WebSocket("<?=$token?>");
         socket.onopen = onOpened;
         socket.onmessage = onMessage;
       }

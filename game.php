@@ -4,14 +4,14 @@
 */
 class Game
 {
-	private $key_name;
-	private $userX;
-	private $userO;
-	private $board;
-	private $moveX;
-	private $winner;
-	private $winning_board;
-	private $link;
+	public $key_name;
+	public $userX;
+	public $userO;
+	public $board;
+	public $moveX;
+	public $winner;
+	public $winning_board;
+	public $link;
 
 	function __construct( $key_name, $params )
 	{
@@ -27,7 +27,11 @@ class Game
 
 	public static function get_by_key_name($key_name)
 	{
-		$data = memcache_get($this->link,$key_name);
+            $link = memcache_init();
+            if (!$key_name) {
+                return false;
+            }
+            $data = memcache_get($link,$key_name);
 		$new_obj = new Game($key_name,$data);
 		return $new_obj;
 	}
@@ -42,14 +46,14 @@ class Game
 			'winner' => $this->winner,
 			'winning_board' => $this->winning_board,
 			);
-		$ret = memcache_set($link, $this->key_name,$stor_mess);
+		$ret = memcache_set($this->link, $this->key_name,$stor_mess);
 		return $ret;
 	}
 }
 
 class Wins
 {
-	const x_win_patterns = array(
+	public static $x_win_patterns = array(
 		'XXX......',
 		'...XXX...',
 		'......XXX',
@@ -58,12 +62,11 @@ class Wins
 		'..X..X..X',
 		'X...X...X',
 		'..X.X.X..');
-	 const o_win_patterns = array_map(function($a){return str_replace('X','O',$a);},Wins::x_win_patterns);	 
 }
 
 class GameUpdater
 {
-	private $game;
+	public $game;
 	function __construct($game) 
 	{
 		$this->game = $game;
@@ -95,12 +98,13 @@ class GameUpdater
 	function check_win()
 	{
 		if ($this->game->moveX) {
-			# O just moved, check for O wins
-			$potential_winner = $this->game->userO;
-			$wins = Wins::o_win_patterns;
+		    # O just moved, check for O wins
+                    $potential_winner = $this->game->userO;
+                    $wins = array_map(function($a){return str_replace('X','O',$a);},Wins::$x_win_patterns);
+		    //$wins = Wins::$o_win_patterns;
 		} else {
-			$potential_winner = $this->game->userX;
-			$wins = Wins::x_win_patterns;
+                    $potential_winner = $this->game->userX;
+		    $wins = Wins::$x_win_patterns;
 		}
 		foreach ($wins as $small) {
 			if ( $this->check_regual( $this->game->board, $small) ) {

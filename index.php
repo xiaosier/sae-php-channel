@@ -1,5 +1,6 @@
 <?php
-require( dir(__FILE__).'/render.php' );
+require( dirname(__FILE__).'/render.php' );
+require( dirname(__FILE__).'/game.php' );
 
 $user = $_COOKIE['u'];
 if (!$user) {
@@ -13,7 +14,7 @@ if (!$game_key) {
 	$stor_mess = array(
 			'userX' => $user,
 			'userO' => null,
-			'board' => str_repeat(" ",9);,
+			'board' => str_repeat(" ",9),
 			'moveX' => true,
 			'winner' => null,
 			'winning_board'=>null,
